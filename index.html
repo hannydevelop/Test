@@ -9,7 +9,8 @@
       function initClient() {
         client = google.accounts.oauth2.initCodeClient({
           client_id: '810913561449-r80nc33r20qe18ij2bcll7i6sv4r8bkg.apps.googleusercontent.com',
-          scope: 'https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/spreadsheets',
+          scope: 'https://www.googleapis.com/auth/calendar.readonly \
+                  https://www.googleapis.com/auth/spreadsheets',
           ux_mode: 'popup',
           callback: (response) => {
             console.log(response.code);

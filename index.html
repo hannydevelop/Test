@@ -7,15 +7,14 @@
     <script>
       var client;
       function initClient() {
-        client = google.accounts.oauth2.initCodeClient({
+        client = google.accounts.oauth2.initTokenClient({
           client_id: '810913561449-r80nc33r20qe18ij2bcll7i6sv4r8bkg.apps.googleusercontent.com',
           scope: 'https://www.googleapis.com/auth/calendar.readonly \
                   https://www.googleapis.com/auth/spreadsheets \
                   https://www.googleapis.com/auth/drive',
           ux_mode: 'popup',
           callback: (response) => {
-            document.cookie = "code=" + response.code;
-            console.log(response.code);
+            console.log(response);
           },
         });
       }
@@ -23,7 +22,7 @@
         // Request authorization code and obtain user consent
         // Return code to backend.
         // let code = getAuthCode()
-          client.requestCode();
+          client.requestAccessToken()
       }
     </script>
     <button onclick="getAuthCode();">Load Your Calendar</button>

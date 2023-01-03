@@ -27,6 +27,15 @@
       // let code = getAuthCode()
       client.requestAccessToken()
     }
+    function gapiStart() {
+        gapi.client.init({
+      })
+    }
+
+    function gapiLoad() {
+      gapi.load('client', gapiStart)
+    }
+
     async function getFiles() {
       let response;
       try {

@@ -28,11 +28,14 @@
       client.requestAccessToken()
     }
     function gapiStart() {
-      await gapi.client.init({
-          apiKey: 'AIzaSyC28unPMdFh8OmVF_rv980dcaf0Lyy0-Jg',
-          discoveryDocs: 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest',
-        });
-        gapiInited = true;
+        gapi.client.init({
+      }).then(function() {
+        gapi.client.load('drive', 'v3');
+      }).then(function(response) {
+        console.log('discovery document loaded');
+      }, function(reason) {
+        console.log('Error: ' + reason.result.error.message);
+      });
     }
 
     function gapiLoad() {

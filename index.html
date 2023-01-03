@@ -1,30 +1,48 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <script src="https://accounts.google.com/gsi/client" onload="initClient()" async defer></script>
-  </head>
-  <body>
-    <script>
-      var client;
-      function initClient() {
-        client = google.accounts.oauth2.initTokenClient({
-          client_id: '810913561449-r80nc33r20qe18ij2bcll7i6sv4r8bkg.apps.googleusercontent.com',
-          scope: 'https://www.googleapis.com/auth/calendar.readonly \
+
+<head>
+  <script src="https://accounts.google.com/gsi/client" onload="initClient()" async defer></script>
+  <script src="https://apis.google.com/js/api.js" onload="gapiLoad()" async defer></script>
+</head>
+
+<body>
+  <script>
+    var client;
+    function initClient() {
+      client = google.accounts.oauth2.initTokenClient({
+        client_id: '810913561449-r80nc33r20qe18ij2bcll7i6sv4r8bkg.apps.googleusercontent.com',
+        scope: 'https://www.googleapis.com/auth/calendar.readonly \
                   https://www.googleapis.com/auth/spreadsheets \
                   https://www.googleapis.com/auth/drive',
-          ux_mode: 'popup',
-          callback: (response) => {
-            console.log(response);
-          },
+        ux_mode: 'popup',
+        callback: (response) => {
+          console.log(response);
+        },
+      });
+    }
+    function getAuthCode() {
+      // Request authorization code and obtain user consent
+      // Return code to backend.
+      // let code = getAuthCode()
+      client.requestAccessToken()
+    }
+    async function getFiles() {
+      let response;
+      try {
+        response = await gapi.client.drive.files.list({
+          'pageSize': 10,
+          'fields': 'files(id, name)',
         });
+        console.log(response);
+      } catch (err) {
+        document.getElementById('content').innerText = err.message;
+        return;
       }
-      function getAuthCode() {
-        // Request authorization code and obtain user consent
-        // Return code to backend.
-        // let code = getAuthCode()
-          client.requestAccessToken()
-      }
-    </script>
-    <button onclick="getAuthCode();">Load Your Calendar</button>
-  </body>
+    }
+  </script>
+  <button onclick="getAuthCode();">Load Your Calendar</button>
+  <button onclick="getFiles();">Get Files</button>
+</body>
+
 </html>

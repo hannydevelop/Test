@@ -22,7 +22,8 @@
                   https://www.googleapis.com/auth/drive',
         ux_mode: 'popup',
         callback: (response) => {
-          return response.access_token;
+          fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + response.access_token)
+        .then(val => console.log(val))
         }
       })
     }
@@ -30,7 +31,10 @@
       // Request authorization code and obtain user consent
       // Return code to backend.
       // let code = getAuthCode()
-      client.requestAccessToken()
+      let value = client.requestAccessToken()
+      console.log(value)
+      let response = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + client.requestAccessToken())
+        .then(response => console.log(response))
     }
 
     // Function to load the gapi client.

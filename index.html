@@ -35,6 +35,11 @@
         .then(response => console.log(response))
     }
 
+    function getInfo() {
+      let response = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + client.requestAccessToken())
+        .then(response => console.log(response))
+    }
+
     // Function to load the gapi client.
     // Gapi is the Google API client library, to load libraries and make requests.
     function gapiStart() {
@@ -90,6 +95,8 @@
   </script>
   <button onclick="getAuthCode();">Login</button>
   <button onclick="createFolder();">Create Folder</button>
+  <button onclick="getInfo();">Create Info</button>
+
 </body>
 
 </html>

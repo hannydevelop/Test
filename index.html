@@ -22,8 +22,13 @@
                   https://www.googleapis.com/auth/drive',
         ux_mode: 'popup',
         callback: (response) => {
-          let value = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + response.access_token)
-        .then(value => console.log(value))
+          let value = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + response.access_token, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+            },
+          })
+            .then(value => console.log(value))
         }
       })
     }

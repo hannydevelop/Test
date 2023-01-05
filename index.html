@@ -22,7 +22,7 @@
                   https://www.googleapis.com/auth/drive',
         ux_mode: 'popup',
         callback: (response) => {
-          console.log(response.access_token);
+          return response.access_token;
         }
       })
     }

@@ -23,7 +23,10 @@
         ux_mode: 'popup',
         callback: (response) => {
           console.log(response);
-        },
+        }
+      }).then (function() {
+        let response = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json')
+        .then(response => console.log(response))
       });
     }
     function getAuthCode() {
@@ -31,15 +34,6 @@
       // Return code to backend.
       // let code = getAuthCode()
       client.requestAccessToken()
-      let response = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json')
-        .then(response => console.log(response))
-
-    }
-
-    function getInfo() {
-      let response = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json')
-        .then(response => console.log(response))
-
     }
 
     // Function to load the gapi client.
@@ -97,7 +91,6 @@
   </script>
   <button onclick="getAuthCode();">Login</button>
   <button onclick="createFolder();">Create Folder</button>
-  <button onclick="getInfo();">User Info</button>
 </body>
 
 </html>

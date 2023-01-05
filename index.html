@@ -28,7 +28,7 @@
               'Accept': 'application/json',
             },
           })
-            .then(value => console.log(value))
+            .then(value => console.log(value.json().catch(err => console.log(err))))
         }
       })
     }

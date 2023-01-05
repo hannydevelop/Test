@@ -22,6 +22,7 @@
                   https://www.googleapis.com/auth/drive',
         ux_mode: 'popup',
         callback: (response) => {
+          // run fetch request to get user info
           let value = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + response.access_token, {
             method: 'GET',
             headers: {

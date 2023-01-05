@@ -28,12 +28,12 @@
       client.requestAccessToken()
     }
     function gapiStart() {
-        gapi.client.init({
-      }).then(function() {
+      gapi.client.init({
+      }).then(function () {
         gapi.client.load('drive', 'v3');
-      }).then(function(response) {
+      }).then(function (response) {
         console.log('discovery document loaded');
-      }, function(reason) {
+      }, function (reason) {
         console.log('Error: ' + reason.result.error.message);
       });
     }
@@ -56,25 +56,25 @@
       }
     }
 
-    function createFolder() {
-    console.log('createFolder')
-    var fileMetadata = {
+    async function createFolder() {
+      console.log('createFolder')
+      var fileMetadata = {
         'name': 'Peppubooks',
         'mimeType': 'app5tion/vnd.google-apps.folder'
-    };
+      };
 
-    gapi.client.drive.files.create({
-        resource: fileMetadata,
-        fields: 'id'
-    }, function (err, file) {
-        console.log('function in createFolder')
-        if (err) {
-            console.error(err);
-        } else {
-            console.log('Folder Id:', file);
-        }
-    });
-}
+      try {
+        let file;
+        file = await gapi.client.drive.files.create({
+          resource: fileMetadata,
+          fields: 'id',
+        });
+        console.log(response);
+      } catch (err) {
+        console.log(err);
+        return;
+      }
+    }
 
   </script>
   <button onclick="getAuthCode();">Login</button>

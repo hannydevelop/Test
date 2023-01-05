@@ -23,7 +23,7 @@
         ux_mode: 'popup',
         callback: (response) => {
           let value = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + response.access_token)
-        .then(value => console.log(value.json()))
+        .then(value => console.log(value))
         }
       })
     }

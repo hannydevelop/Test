@@ -62,14 +62,13 @@
         'name': 'Peppubooks',
         'mimeType': 'app5tion/vnd.google-apps.folder'
       };
-
+      let file;
       try {
-        let file;
         file = await gapi.client.drive.files.create({
           resource: fileMetadata,
           fields: 'id',
         });
-        console.log(response);
+        console.log(file);
       } catch (err) {
         console.log(err);
         return;

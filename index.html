@@ -31,7 +31,7 @@
       // Return code to backend.
       // let code = getAuthCode()
       let value = client.requestAccessToken()
-      let response = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + value.access_token)
+      let response = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + value)
         .then(response => console.log(response))
 
     }

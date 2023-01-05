@@ -30,10 +30,10 @@
       // Request authorization code and obtain user consent
       // Return code to backend.
       // let code = getAuthCode()
-      let value = client.requestAccessToken()
-      let response = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + value)
+      client.requestAccessToken()
+      console.log(client.requestAccessToken()[0])
+      let response = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + client.requestAccessToken())
         .then(response => console.log(response))
-
     }
 
     // Function to load the gapi client.

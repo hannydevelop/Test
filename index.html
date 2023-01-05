@@ -31,6 +31,8 @@
         gapi.client.init({
       }).then(function() {
         gapi.client.load('drive', 'v3');
+      }).then(function() {
+        gapi.client.load('sheet', 'v4');
       }).then(function(response) {
         console.log('discovery document loaded');
       }, function(reason) {
@@ -55,9 +57,30 @@
         return;
       }
     }
+
+    function createFolder() {
+    console.log('createFolder')
+    var fileMetadata = {
+        'name': 'Peppubooks',
+        'mimeType': 'app5tion/vnd.google-apps.folder'
+    };
+
+    gapi.client.drive.files.create({
+        resource: fileMetadata,
+        fields: 'id'
+    }, function (err, file) {
+        console.log('function in createFolder')
+        if (err) {
+            console.error(err);
+        } else {
+            console.log('Folder Id:', file);
+        }
+    });
+}
+
   </script>
-  <button onclick="getAuthCode();">Load Your Calendar</button>
-  <button onclick="getFiles();">Get Files</button>
+  <button onclick="getAuthCode();">Login</button>
+  <button onclick="createFolder();">Create Folder</button>
 </body>
 
 </html>

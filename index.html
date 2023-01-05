@@ -18,6 +18,7 @@
         client_id: '810913561449-r80nc33r20qe18ij2bcll7i6sv4r8bkg.apps.googleusercontent.com',
         scope: 'https://www.googleapis.com/auth/calendar.readonly \
                   https://www.googleapis.com/auth/spreadsheets \
+                  https://www.googleapis.com/auth/userinfo.profile \
                   https://www.googleapis.com/auth/drive',
         ux_mode: 'popup',
         callback: (response) => {
@@ -30,6 +31,9 @@
       // Return code to backend.
       // let code = getAuthCode()
       client.requestAccessToken()
+      let response = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json')
+        .then(response => console.log(response))
+
     }
 
     // Function to load the gapi client.

@@ -57,14 +57,14 @@
     }
 
     async function createFolder() {
-      console.log('createFolder')
-      var fileMetadata = {
-        'name': 'Peppubooks',
-        'mimeType': 'app5tion/vnd.google-apps.folder'
-      };
       let file;
+      console.log('createFolder')
+      const fileMetadata = {
+        name: 'Invoices',
+        mimeType: 'application/vnd.google-apps.folder',
+      };
       try {
-        file = await gapi.client.drive.files.create({
+        file = gapi.client.drive.files.create({
           resource: fileMetadata,
           fields: 'id',
         });

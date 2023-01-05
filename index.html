@@ -1,7 +1,9 @@
+<!-- This is a test template for peppubooks functions -->
 <!DOCTYPE html>
 <html>
 
 <head>
+  <!-- JavaScript to load gsi and gapi -->
   <script src="https://accounts.google.com/gsi/client" onload="initClient()" async defer></script>
   <script src="https://apis.google.com/js/api.js" onload="gapiLoad()" async defer></script>
 </head>
@@ -9,6 +11,8 @@
 <body>
   <script>
     var client;
+    // Function to initialize the client, with clientId and scopes.
+    // After sign in, we return the auth code to the console.
     function initClient() {
       client = google.accounts.oauth2.initTokenClient({
         client_id: '810913561449-r80nc33r20qe18ij2bcll7i6sv4r8bkg.apps.googleusercontent.com',
@@ -27,6 +31,9 @@
       // let code = getAuthCode()
       client.requestAccessToken()
     }
+
+    // Function to load the gapi client.
+    // Gapi is the Google API client library, to load libraries and make requests.
     function gapiStart() {
       gapi.client.init({
       }).then(function () {
@@ -38,6 +45,7 @@
       });
     }
 
+    // Gapi load function on start.
     function gapiLoad() {
       gapi.load('client', gapiStart)
     }
@@ -56,6 +64,7 @@
       }
     }
 
+    // Function to create peppubooks folder in the user's drive.
     async function createFolder() {
       let file;
       console.log('createFolder')

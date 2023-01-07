@@ -15,10 +15,8 @@
         scope: 'https://www.googleapis.com/auth/calendar.readonly \
                   https://www.googleapis.com/auth/spreadsheets \
                   https://www.googleapis.com/auth/drive',
-        ux_mode: 'popup',
-        callback: (response) => {
-          console.log(response);
-        },
+        ux_mode: 'redirect',
+        redirect_uri: 'https://app.peppubooks.com'
       });
     }
     function getAuthCode() {

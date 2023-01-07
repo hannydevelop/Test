@@ -23,9 +23,8 @@
         ux_mode: 'popup',
         callback: (response) => {
           // run fetch request to get user info
-          access_token = response.access_token;
-          function blah(access_token) {
-            let value = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + access_token, {
+          // access_token = response.access_token;
+          let value = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + response.access_token, {
             method: 'GET',
             headers: {
               'Accept': 'application/json',
@@ -33,7 +32,6 @@
           })
             .then(value => value.json())
             .then(text => console.log(text))
-          }
         }
       })
     }
@@ -49,7 +47,6 @@
       // Return code to backend.
       // let code = getAuthCode()
       client.requestAccessToken()
-      console.log(blah);
     }
 
     // Function to load the gapi client.

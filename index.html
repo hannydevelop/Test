@@ -1,7 +1,9 @@
+<!-- This is a test template for peppubooks functions -->
 <!DOCTYPE html>
 <html>
 
 <head>
+  <!-- JavaScript to load gsi and gapi -->
   <script src="https://accounts.google.com/gsi/client" onload="initClient()" async defer></script>
   <script src="https://apis.google.com/js/api.js" onload="gapiLoad()" async defer></script>
 </head>
@@ -9,11 +11,14 @@
 <body>
   <script>
     var client;
+    // Function to initialize the client, with clientId and scopes.
+    // After sign in, we return the auth code to the console.
     function initClient() {
       client = google.accounts.oauth2.initTokenClient({
         client_id: '810913561449-r80nc33r20qe18ij2bcll7i6sv4r8bkg.apps.googleusercontent.com',
         scope: 'https://www.googleapis.com/auth/calendar.readonly \
                   https://www.googleapis.com/auth/spreadsheets \
+                  https://www.googleapis.com/auth/userinfo.profile \
                   https://www.googleapis.com/auth/drive',
         ux_mode: 'redirect',
         redirect_uri: 'https://app.peppubooks.com'
@@ -25,17 +30,21 @@
       // let code = getAuthCode()
       client.requestAccessToken()
     }
+
+    // Function to load the gapi client.
+    // Gapi is the Google API client library, to load libraries and make requests.
     function gapiStart() {
-        gapi.client.init({
-      }).then(function() {
+      gapi.client.init({
+      }).then(function () {
         gapi.client.load('drive', 'v3');
-      }).then(function(response) {
+      }).then(function (response) {
         console.log('discovery document loaded');
-      }, function(reason) {
+      }, function (reason) {
         console.log('Error: ' + reason.result.error.message);
       });
     }
 
+    // Gapi load function on start.
     function gapiLoad() {
       gapi.load('client', gapiStart)
     }
@@ -53,9 +62,30 @@
         return;
       }
     }
+
+    // Function to create peppubooks folder in the user's drive.
+    async function createFolder() {
+      let file;
+      console.log('createFolder')
+      var fileMetadata = {
+        'name': 'Peppubooks',
+        'mimeType': 'application/vnd.google-apps.folder'
+      };
+      try {
+        file = await gapi.client.drive.files.create({
+          resource: fileMetadata,
+          fields: 'id',
+        });
+        console.log(file);
+      } catch (err) {
+        console.log(err);
+        return;
+      }
+    }
+
   </script>
-  <button onclick="getAuthCode();">Load Your Calendar</button>
-  <button onclick="getFiles();">Get Files</button>
+  <button onclick="getAuthCode();">Login</button>
+  <button onclick="createFolder();">Create Folder</button>
 </body>
 
 </html>

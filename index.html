@@ -23,7 +23,6 @@
         ux_mode: 'popup',
         callback: (response) => {
           // run fetch request to get user info
-          // access_token = response.access_token;
           let value = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + response.access_token, {
             method: 'GET',
             headers: {
@@ -35,13 +34,6 @@
         }
       })
     }
-    /*
-    // signout
-      function revokeToken() {
-        google.accounts.oauth2.revoke(access_token, () => {console.log('access token revoked')});
-      }
-    */
-
     function getAuthCode() {
       // Request authorization code and obtain user consent
       // Return code to backend.

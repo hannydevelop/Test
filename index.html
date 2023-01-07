@@ -7,7 +7,7 @@
     <script>
       var client;
       function initClient() {
-        client = google.accounts.oauth2.initCodeClient({
+        client = google.accounts.oauth2.initTokenClient({
           client_id: '810913561449-r80nc33r20qe18ij2bcll7i6sv4r8bkg.apps.googleusercontent.com',
           scope: 'https://www.googleapis.com/auth/calendar.readonly \
                   https://www.googleapis.com/auth/photoslibrary.readonly',
@@ -18,7 +18,7 @@
       // Request an access token
       function getAuthCode() {
         // Request authorization code and obtain user consent
-          client.requestCode();
+        client.requestAccessToken()
       }
     </script>
     <button onclick="getAuthCode();">Load Your Calendar</button>

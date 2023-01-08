@@ -32,7 +32,7 @@
             },
           })
             .then(value => value.json())
-            .then(text => console.log(text.name))
+            .then(text => text => document.cookie = "userinfo=" + text.name, document.cookie = "userimg=" + text.image)
         }
       })
     }

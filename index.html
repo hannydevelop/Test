@@ -33,6 +33,7 @@
           })
             .then(value => value.json())
             .then(text => document.cookie = "userinfo=" + JSON.stringify({username: text.name, userimg: text.name}))
+            .then(console.log(check_cookie_name('username')))
         }
       })
     }
@@ -47,9 +48,6 @@
            console.log('--something went wrong---');
       }
    }
-
-   let min = check_cookie_name('username');
-   console.log(min);
 
     function getAuthCode() {
       // Request authorization code and obtain user consent

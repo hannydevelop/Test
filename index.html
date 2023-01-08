@@ -23,13 +23,15 @@
         ux_mode: 'popup',
         callback: (response) => {
           // run fetch request to get user info
+          // store user info as cookies.
+          // retrieve that after the user login.
           let value = fetch('https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=' + response.access_token, {
             method: 'GET',
             headers: {
               'Accept': 'application/json',
             },
           })
-            .then(value => value.json())
+            .then(value => value.name)
             .then(text => console.log(text))
         }
       })

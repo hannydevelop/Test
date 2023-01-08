@@ -31,8 +31,8 @@
               'Accept': 'application/json',
             },
           })
-            .then(value => value.name)
-            .then(text => console.log(text))
+            .then(value => value.json)
+            .then(text => console.log(text.name))
         }
       })
     }

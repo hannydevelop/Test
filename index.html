@@ -33,7 +33,7 @@
           })
             .then(value => value.json())
             .then(text => document.cookie = "userinfo=" + JSON.stringify({username: text.name, userimg: text.name}))
-            .then(console.log(check_cookie_name('userinfo').userinfo))
+            .then(console.log(check_cookie_name('userinfo')))
         }
       })
     }
@@ -42,7 +42,7 @@
     {
       var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
       if (match) {
-        console.log(match);
+        console.log(match[0]);
       }
       else{
            console.log('--something went wrong---');

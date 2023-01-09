@@ -33,7 +33,7 @@
           })
             .then(value => value.json())
             .then(text => document.cookie = "userinfo=" + JSON.stringify({ username: text.name, userimg: text.name }))
-            .then(console.log(JSON.parse(readCookie('userinfo'))))
+            .then(console.log(JSON.parse(readCookie('userinfo')).username))
         }
       })
     }

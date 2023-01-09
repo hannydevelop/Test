@@ -32,22 +32,22 @@
             },
           })
             .then(value => value.json())
-            .then(text => document.cookie = "userinfo=" + JSON.stringify({username: text.name, userimg: text.name}))
-            .then(console.log(JSON.parse(check_cookie_name('userinfo'))))
+            .then(text => document.cookie = "userinfo=" + JSON.stringify({ username: text.name, userimg: text.name }))
+            .then(console.log(JSON.parse(readCookie('userinfo'))))
         }
       })
     }
 
-    function check_cookie_name(name) 
-    {
-      var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-      if (match) {
-        console.log(match[0]);
+    function readCookie(name) {
+      var nameEQ = name + "=";
+      var ca = document.cookie.split(';');
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
       }
-      else{
-           console.log('--something went wrong---');
-      }
-   }
+      return null;
+    }
 
     function getAuthCode() {
       // Request authorization code and obtain user consent

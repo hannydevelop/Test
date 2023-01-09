@@ -32,9 +32,8 @@
             },
           })
             .then(value => value.json())
-            .then(text => console.log(text))
-            // .then(text => document.cookie = "userinfo=" + JSON.stringify({ username: text.name, userimg: text.name }))
-            // .then(console.log(JSON.parse(readCookie('userinfo')).username))
+            .then(text => document.cookie = "userinfo=" + JSON.stringify({ username: text.name, userimg: text.name }))
+            .then(console.log(JSON.parse(readCookie('userinfo')).username))
         }
       })
     }

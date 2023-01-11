@@ -112,17 +112,14 @@
       }
 
       const fileMetadata = {
-        name: 'pnoto.jpg',
-        parents: [folderId],
-      };
-      const media = {
-        mimeType: 'image/jpeg',
+        'name': 'Template Store',
+        'parents': [folderId],
+        'mimeType': 'application/vnd.google-apps.folder'
       };
 
       try {
         const file = gapi.client.drive.files.create({
           resource: fileMetadata,
-          media: media,
           fields: 'id',
         });
         console.log('File Id:', file);

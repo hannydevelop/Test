@@ -125,9 +125,8 @@
           media: media,
           fields: 'id',
         });
-        console.log('File Id:', file.result.id);
+        console.log('File Id:', file);
         // we should store this somewhere safe.
-        fileId = file.result.id;
       } catch (err) {
         // TODO(developer) - Handle error
         throw err;

@@ -111,14 +111,14 @@
         return;
       }
 
-      const fileMetadata = {
+      console.log('createFile')
+      var fileMetadata = {
         'name': 'Template Store',
-
         'mimeType': 'application/vnd.google-apps.folder'
       };
 
       try {
-        const file = gapi.client.drive.files.create({
+        file = gapi.client.drive.files.create({
           resource: fileMetadata,
           fields: 'id',
         });

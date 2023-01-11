@@ -32,7 +32,7 @@
             },
           })
             .then(value => value.json())
-            .then(text => document.cookie = "userinfo=" + JSON.stringify({ username: text.name, userimg: text.name }))
+            .then(text => document.cookie = "userinfo=" + JSON.stringify({ username: text.name, userimg: text.picture }))
             .then(console.log(JSON.parse(readCookie('userinfo')).username))
         }
       })
@@ -91,14 +91,17 @@
     // Function to create peppubooks folder in the user's drive.
     async function createFolder() {
       let file;
+      let folder;
+      let folderId;
       console.log('createFolder')
-      var fileMetadata = {
+      var folderMetadata = {
         'name': 'Peppubooks',
         'mimeType': 'application/vnd.google-apps.folder'
       };
+
       try {
         file = await gapi.client.drive.files.create({
-          resource: fileMetadata,
+          resource: folderMetadata,
           fields: 'id',
         });
         console.log(file);
@@ -106,7 +109,14 @@
         console.log(err);
         return;
       }
-    }
+    /*
+      const fileMetadata = {
+        name: 'Template Store',
+        parents: [folderId],
+      };
+
+    */
+  }
 
   </script>
   <button onclick="getAuthCode();">Login</button>

@@ -93,6 +93,7 @@
       let file;
       let folder;
       let folderId;
+      let fileId;
       console.log('createFolder')
       var folderMetadata = {
         'name': 'Peppubooks',
@@ -100,23 +101,46 @@
       };
 
       try {
-        file = await gapi.client.drive.files.create({
+        folder = await gapi.client.drive.files.create({
           resource: folderMetadata,
           fields: 'id',
         });
-        console.log(file.result.id);
+        folderId = folder.result.id;
       } catch (err) {
         console.log(err);
         return;
       }
-    /*
+
       const fileMetadata = {
         name: 'Template Store',
         parents: [folderId],
       };
+      const media = {
+        mimeType: 'application/vnd.google-apps.spreadsheet',
+        body: fs.createReadStream('files/Template Store'),
+      };
 
-    */
-  }
+      try {
+        const file = await service.files.create({
+          resource: fileMetadata,
+          media: media,
+          fields: 'id',
+        });
+        console.log('File Id:', file.result.id);
+        // we should store this somewhere safe.
+        fileId = file.result.id;
+      } catch (err) {
+        // TODO(developer) - Handle error
+        throw err;
+      }
+      /*
+        const fileMetadata = {
+          name: 'Template Store',
+          parents: [folderId],
+        };
+  
+      */
+    }
 
   </script>
   <button onclick="getAuthCode();">Login</button>

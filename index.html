@@ -120,7 +120,7 @@
       };
 
       try {
-        const file = await service.files.create({
+        const file = gapi.client.drive.files.create({
           resource: fileMetadata,
           media: media,
           fields: 'id',

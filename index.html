@@ -132,9 +132,10 @@
         return;
       }
     }
-    // This is a test, please remove
-    document.cookie = "name=oeschger; SameSite=None; Secure";
-    document.cookie = "favorite_food=tripe; SameSite=None; Secure";
+    function createCook() {
+      document.cookie = "name=oeschger; SameSite=None; Secure";
+      document.cookie = "favorite_food=tripe; SameSite=None; Secure";
+    }
 
     function showCookies() {
       const output = document.getElementById('cookies')
@@ -146,10 +147,13 @@
       output.textContent = ''
     }
 
+
+
   </script>
   <button onclick="getAuthCode();">Login</button>
   <button onclick="createFolder();">Create Folder</button>
   <button onclick="showCookies()">showCookies</button>
+  <button onclick="createCook()">createCookies</button>
 </body>
 
 </html>

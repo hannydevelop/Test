@@ -89,17 +89,19 @@
     }
 
     // Function to create peppubooks folder in the user's drive.
+    // This function also creates a Template Store in the peppubooks folder.
     async function createFolder() {
+      // Declare file, folder, folderId,fileId
       let file;
       let folder;
       let folderId;
       let fileId;
-      console.log('createFolder')
+      // Folder Metadata
       var folderMetadata = {
         'name': 'Peppubooks',
         'mimeType': 'application/vnd.google-apps.folder'
       };
-
+      // Method to create folder
       try {
         folder = await gapi.client.drive.files.create({
           resource: folderMetadata,
@@ -111,35 +113,43 @@
         return;
       }
 
-      console.log('createFile')
-      var folderMetadata = {
+      // File Metadata
+      var fileMetadata = {
         'name': 'Blahh',
         'mimeType': 'application/vnd.google-apps.spreadsheet',
         'parents': [folderId],
       };
 
+      // Method to create file inside peppubooks folder
       try {
-        folder = await gapi.client.drive.files.create({
-          resource: folderMetadata,
+        file = await gapi.client.drive.files.create({
+          resource: fileMetadata,
           fields: 'id',
         });
-        folderId = folder.result.id;
+        fileId = file.result.id;
       } catch (err) {
         console.log(err);
         return;
       }
-      /*
-        const fileMetadata = {
-          name: 'Template Store',
-          parents: [folderId],
-        };
-  
-      */
+    }
+    // This is a test, please remove
+    document.cookie = "name=oeschger; SameSite=None; Secure";
+    document.cookie = "favorite_food=tripe; SameSite=None; Secure";
+
+    function showCookies() {
+      const output = document.getElementById('cookies')
+      output.textContent = `> ${document.cookie}`
+    }
+
+    function clearOutputCookies() {
+      const output = document.getElementById('cookies')
+      output.textContent = ''
     }
 
   </script>
   <button onclick="getAuthCode();">Login</button>
   <button onclick="createFolder();">Create Folder</button>
+  <button onclick="showCookies()">showCookies</button>
 </body>
 
 </html>

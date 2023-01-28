@@ -362,6 +362,27 @@ function copyFile(e) {
     .build();
 }
 
+function postInvoice(e) {
+  var res = e['formInput'];
+  var contactName = res['Contact Name'] ? res['Contact Name'] : 'Expenses';
+  var clientName = res['Client Company'] ? res['Client Company'] : 'Expenses';
+  var clientAddress = res['Client Address'] ? res['Client Address'] : 'Expenses';
+  var dueDate = res['Due Date'] ? res['Due Date'] : 'Expenses';
+  var description = res['Description'] ? res['Description'] : 'Expenses';
+  var unitPrice = res['Unit Price'] ? res['Unit Price'] : 'Expenses';
+  var quantity = res['Quantity'] ? res['Quantity'] : 'Expenses';
+  const invNumber = Math.floor(100000 + Math.random() * 900000);
+
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B10").setValue(contactName);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B11").setValue(clientName);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B12").setValue(clientAddress);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F11").setValue(dueDate);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B16:C16").setValue(description);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!E16").setValue(unitPrice);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!D16").setValue(quantity);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F8").setValue(invNumber);
+}
+
 function submitRecord(e) {
   var res = e['formInput'];
 

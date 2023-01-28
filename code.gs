@@ -5,6 +5,7 @@ var newSheetSection = CardService.newCardSection();
 var inputSheetSection = CardService.newCardSection();
 var buttonSheetSection = CardService.newCardSection();
 var invoiceSection = CardService.newCardSection();
+var navigationSection = CardService.newCardSection();
 
 const INPUT_MAP = [
   { text: 'Bank', val: 'Bank' },
@@ -56,7 +57,6 @@ function sendInvoice(e) {
   var res = e['formInput'];
   var invoiceName = res['Invoice Name'] ? res['Invoice Name'] : 'Invoice';
 
-  const fr = 0, fc = 0, lc = 9, lr = 27;
   var ssID = SpreadsheetApp.getActiveSpreadsheet().getId();
   var gid = SpreadsheetApp.getActiveSpreadsheet().getSheetId();
   var url = "https://docs.google.com/spreadsheets/d/" + ssID + "/export" +
@@ -74,8 +74,7 @@ function sendInvoice(e) {
     "sheetnames=false&" +
     "pagenum=UNDEFINED&" +
     "attachment=true&" +
-    "gid=" + gid + '&' +
-    "r1=" + fr + "&c1=" + fc + "&r2=" + lr + "&c2=" + lc;
+    "gid=" + gid + '&';
 
   var params = { method: "GET", headers: { "authorization": "Bearer " + ScriptApp.getOAuthToken() } };
 
@@ -85,8 +84,8 @@ function sendInvoice(e) {
 
 
   //or send as email
-  var email = SpreadsheetApp.getActiveSheet().getRange("invoicegen!B13").getValue();
-  var company = SpreadsheetApp.getActiveSheet().getRange("invoicegen!B2").getValue();
+  var email = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B13").getValue();
+  var company = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B2").getValue();
   var subject = `Invoice From ${company}`;
   var body = 'Invoice Ready';
 
@@ -98,15 +97,15 @@ function sendInvoice(e) {
     }]
   })
 
-    // send info to invoice template record.
-  var date = SpreadsheetApp.getActiveSheet().getRange("invoicegen!F10").getValue();
-  var invoiceNum = SpreadsheetApp.getActiveSheet().getRange("invoicegen!F9").getValue();
-  var description = SpreadsheetApp.getActiveSheet().getRange("invoicegen!B16:C16").getValue();
-  var dueDate = SpreadsheetApp.getActiveSheet().getRange("invoicegen!F11").getValue(); 
-  var amount = SpreadsheetApp.getActiveSheet().getRange("invoicegen!F31").getValue(); 
+  // send info to invoice template record.
+  var date = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F10").getValue();
+  var invoiceNum = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F9").getValue();
+  var description = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B16:C16").getValue();
+  var dueDate = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F11").getValue();
+  var amount = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F31").getValue();
   // var receiverAddr = email
-  
-    var request = {
+
+  var request = {
     "majorDimension": "ROWS",
     "values": [
       [
@@ -135,29 +134,53 @@ function sendInvoice(e) {
     .build();
 }
 
-function onHomepage() {
-  // Trigger to send email reminder everyday at 7:30am in their time zone.
+// update transaction if invoice is completed
+function onEdit() {
+  var spreadsheet = SpreadsheetApp.openById('1_f0kSp0jD5LLG_HRfzJymq-YDQc52qw58F9CEMBV7ps');
+  /// e.g.  var spreadsheet = SpreadsheetApp.openById('0AkGlO9jJLGO8dDJad3VNTkhJcHR3UXlJSVRNTFJreWc');     
 
-  /*ScriptApp.newTrigger('sendEmails')
+  var sheet = spreadsheet.getSheets()[2];
+
+  var dataRange = sheet.getRange(1, 7, 999);
+  var values = dataRange.getValues();
+
+
+
+  var optionalArgs = { valueInputOption: "USER_ENTERED" };
+
+  for (var row in values) {
+    for (var col in values[row]) {
+      if (values[row][col] == "yes") {
+        var request = {
+          "majorDimension": "ROWS",
+          "values": [
+            [
+              values[row][col]
+            ]
+          ]
+        };
+        Sheets.Spreadsheets.Values.append(
+          request,
+          spreadsheetId,
+          'A:E',
+          optionalArgs
+        )
+      }
+    }
+  }
+}
+
+
+function onHomepage() {
+  ScriptApp.newTrigger('sendEmails')
     .timeBased()
-    .atHour(1)
-    .nearMinute(7)
+    .atHour(7)
+    .nearMinute(0)
     .everyDays(1)
     .create();
-  */
+}
 
-  var invoiceName = CardService.newTextInput()
-    .setFieldName('Invoice Name')
-    .setTitle('Invoice Name');
-  var sendInvoice = CardService.newAction()
-    .setFunctionName('sendInvoice');
-  var newInvoiceButton = CardService.newTextButton()
-    .setText('Send Invoice')
-    .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
-    .setOnClickAction(sendInvoice);
-    invoiceSection.addWidget(invoiceName);
-  invoiceSection.addWidget(CardService.newButtonSet().addButton(newInvoiceButton));
-
+function onDrive() {
   var sheetName = CardService.newTextInput()
     .setFieldName('Sheet Name')
     .setTitle('Sheet Name');
@@ -170,6 +193,35 @@ function onHomepage() {
   newSheetSection.addWidget(sheetName);
   newSheetSection.addWidget(CardService.newButtonSet().addButton(newSheetButton));
 
+  var card = CardService.newCardBuilder()
+    .setHeader(CardService.newCardHeader().setTitle("Manage all bookkeeping in one place. Start by creating a Spreadsheet"))
+    .addSection(newSheetSection)
+    .build();
+  return card;
+}
+
+function invoice() {
+  var invoiceName = CardService.newTextInput()
+    .setFieldName('Invoice Name')
+    .setTitle('Invoice Name');
+  var sendInvoice = CardService.newAction()
+    .setFunctionName('sendInvoice');
+  var newInvoiceButton = CardService.newTextButton()
+    .setText('Send Invoice')
+    .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
+    .setOnClickAction(sendInvoice);
+  invoiceSection.addWidget(invoiceName);
+  invoiceSection.addWidget(CardService.newButtonSet().addButton(newInvoiceButton));
+
+  var card = CardService.newCardBuilder()
+    .setName("Card name")
+    .setHeader(CardService.newCardHeader().setTitle("Create, Send and Track Invoices"))
+    .addSection(invoiceSection)
+    .build();
+  return card;
+}
+
+function transaction() {
   var description = CardService.newTextInput()
     .setFieldName('Description')
     .setTitle('Description');
@@ -213,14 +265,114 @@ function onHomepage() {
 
   var card = CardService.newCardBuilder()
     .setName("Card name")
-    .setHeader(CardService.newCardHeader().setTitle("Card title"))
-    .addSection(newSheetSection)
+    .setHeader(CardService.newCardHeader().setTitle("Record Transactions"))
+    .addSection(inputSheetSection)
+    .addSection(buttonSheetSection)
+    .build();
+  return card;
+}
+
+function onSheet() {
+  var buttonAction = CardService.newAction()
+    .setFunctionName('invoice');
+  navigationSection.addWidget(CardService.newDecoratedText()
+    .setBottomLabel("Record Transactions in Sheet")
+    .setIconUrl('https://www.linkpicture.com/q/book_5.png')
+    .setEndIcon(CardService.newIconImage().setIconUrl('https://www.linkpicture.com/q/icons8-forward-button-64.png'))
+    .setText('Invoice Actions')
+    .setOnClickAction(buttonAction));
+
+  var buttonAction = CardService.newAction()
+    .setFunctionName('transaction');
+  navigationSection.addWidget(CardService.newDecoratedText()
+    .setBottomLabel("Create, Send and Track Invoices")
+    .setIconUrl('https://www.linkpicture.com/q/bookkeeping.png')
+    .setEndIcon(CardService.newIconImage().setIconUrl('https://www.linkpicture.com/q/icons8-forward-button-64.png'))
+    .setText('Transaction Actions')
+    .setOnClickAction(buttonAction));
+
+
+
+
+  var card = CardService.newCardBuilder()
+    .setName("Card name")
+    .setHeader(CardService.newCardHeader().setTitle("Perform all bookkeeping actions in your sheet"))
+    .addSection(navigationSection)
+    .build();
+  return card;
+}
+
+/* 
+function onSheet() {
+  var invoiceName = CardService.newTextInput()
+    .setFieldName('Invoice Name')
+    .setTitle('Invoice Name');
+  var sendInvoice = CardService.newAction()
+    .setFunctionName('sendInvoice');
+  var newInvoiceButton = CardService.newTextButton()
+    .setText('Send Invoice')
+    .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
+    .setOnClickAction(sendInvoice);
+  invoiceSection.addWidget(invoiceName);
+  var buttonAction = CardService.newAction()
+        .setFunctionName('invoice');
+  invoiceSection.addWidget(CardService.newTextButton()
+        .setText('Notify')
+        .setOnClickAction(buttonAction));
+  invoiceSection.addWidget(CardService.newButtonSet().addButton(newInvoiceButton));
+
+  var description = CardService.newTextInput()
+    .setFieldName('Description')
+    .setTitle('Description');
+
+  var amount = CardService.newTextInput()
+    .setFieldName('Amount')
+    .setTitle('Amount');
+
+  var debit = CardService.newSelectionInput().setTitle('From')
+    .setFieldName('Debit')
+    .setType(CardService.SelectionInputType.DROPDOWN);
+
+  INPUT_MAP.forEach((language, index, array) => {
+    debit.addItem(language.text, language.val, language.val == true);
+  })
+
+  var credit = CardService.newSelectionInput().setTitle('To')
+    .setFieldName('Credit')
+    .setType(CardService.SelectionInputType.DROPDOWN);
+
+  INPUT_MAP.forEach((language, index, array) => {
+    credit.addItem(language.text, language.val, language.val == true);
+  })
+
+  inputSheetSection.addWidget(description);
+  inputSheetSection.addWidget(amount);
+  inputSheetSection.addWidget(debit);
+  inputSheetSection.addWidget(credit);
+
+
+  buttonSheetSection.addWidget(CardService.newButtonSet()
+    .addButton(CardService.newTextButton()
+      .setText('Record Transaction')
+      .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
+      .setOnClickAction(CardService.newAction().setFunctionName('submitRecord'))
+      .setDisabled(false))
+    .addButton(CardService.newTextButton()
+      .setText('Clear')
+      .setOnClickAction(CardService.newAction().setFunctionName('clearText'))
+      .setDisabled(false)));
+
+
+  var card = CardService.newCardBuilder()
+    .setName("Card name")
+    .setHeader(CardService.newCardHeader().setTitle("Perform all bookkeeping actions in your sheet"))
     .addSection(inputSheetSection)
     .addSection(buttonSheetSection)
     .addSection(invoiceSection)
     .build();
   return card;
 }
+*/
 
 function copyFile(e) {
   var res = e['formInput'];
@@ -244,6 +396,16 @@ function submitRecord(e) {
 
 
   let spreadsheetId = SpreadsheetApp.getActiveSpreadsheet().getId();
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  let mm = today.getMonth() + 1; // Months start at 0!
+  let dd = today.getDate();
+
+  if (dd < 10) dd = '0' + dd;
+  if (mm < 10) mm = '0' + mm;
+
+  const formattedToday = dd + '/' + mm + '/' + yyyy;
+  const transactiomNumber = Math.floor(100000 + Math.random() * 900000);
 
   // Add today's date
   // Add unique reference number
@@ -252,8 +414,8 @@ function submitRecord(e) {
     "majorDimension": "ROWS",
     "values": [
       [
-        '2023-01-01',
-        '1',
+        formattedToday,
+        `TRAN${transactiomNumber}`,
         Description,
         Amount,
         Debit,

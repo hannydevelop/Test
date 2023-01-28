@@ -6,6 +6,7 @@ var inputSheetSection = CardService.newCardSection();
 var buttonSheetSection = CardService.newCardSection();
 var invoiceSection = CardService.newCardSection();
 var navigationSection = CardService.newCardSection();
+var sendInvoiceSection = CardService.newCardSection();
 
 const INPUT_MAP = [
   { text: 'Bank', val: 'Bank' },
@@ -201,6 +202,43 @@ function onDrive() {
 }
 
 function invoice() {
+  // create invoice
+  var contactName = CardService.newTextInput()
+    .setFieldName(`Contact Name`)
+    .setTitle(`Receiver's name`);
+
+  var clientName = CardService.newTextInput()
+    .setFieldName(`Client Company`)
+    .setTitle(`Client Company's Name`);
+
+  var clientAddress = CardService.newTextInput()
+    .setFieldName(`Client Address`)
+    .setTitle(`Client Company's Address`);
+
+  var dueDate = CardService.newDatePicker()
+    .setFieldName('Due Date')
+    .setTitle('Due Date');
+
+  var description = CardService.newTextInput()
+    .setFieldName(`Description`)
+    .setTitle(`Description`);
+
+  var quantity = CardService.newTextInput()
+    .setFieldName(`Quantity`)
+    .setTitle(`Quantity`);
+
+  var unitPrice = CardService.newTextInput()
+    .setFieldName(`Unit Price`)
+    .setTitle(`Unit Price`);
+
+  var postInvoice = CardService.newAction()
+    .setFunctionName('postInvoice');
+  var newpostInvoiceButton = CardService.newTextButton()
+    .setText('View Invoice')
+    .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
+    .setOnClickAction(postInvoice);
+
+  // send invoice to user.
   var invoiceName = CardService.newTextInput()
     .setFieldName('Invoice Name')
     .setTitle('Invoice Name');
@@ -210,13 +248,24 @@ function invoice() {
     .setText('Send Invoice')
     .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
     .setOnClickAction(sendInvoice);
-  invoiceSection.addWidget(invoiceName);
-  invoiceSection.addWidget(CardService.newButtonSet().addButton(newInvoiceButton));
+
+  invoiceSection.addWidget(contactName);
+  invoiceSection.addWidget(clientName);
+  invoiceSection.addWidget(clientAddress);
+  invoiceSection.addWidget(dueDate);
+  invoiceSection.addWidget(description);
+  invoiceSection.addWidget(quantity);
+  invoiceSection.addWidget(unitPrice);
+  invoiceSection.addWidget(CardService.newButtonSet().addButton(newpostInvoiceButton));
+
+  sendInvoiceSection.addWidget(invoiceName);
+  sendInvoiceSection.addWidget(CardService.newButtonSet().addButton(newInvoiceButton));
 
   var card = CardService.newCardBuilder()
     .setName("Card name")
     .setHeader(CardService.newCardHeader().setTitle("Create, Send and Track Invoices"))
     .addSection(invoiceSection)
+    .addSection(sendInvoiceSection)
     .build();
   return card;
 }
@@ -296,83 +345,11 @@ function onSheet() {
 
   var card = CardService.newCardBuilder()
     .setName("Card name")
-    .setHeader(CardService.newCardHeader().setTitle("Perform all bookkeeping actions in your sheet"))
+    .setHeader(CardService.newCardHeader().setTitle("Perform all bookkeeping actions in your sheet").setImageUrl('https://www.linkpicture.com/q/IMG_2430.png'))
     .addSection(navigationSection)
     .build();
   return card;
 }
-
-/* 
-function onSheet() {
-  var invoiceName = CardService.newTextInput()
-    .setFieldName('Invoice Name')
-    .setTitle('Invoice Name');
-  var sendInvoice = CardService.newAction()
-    .setFunctionName('sendInvoice');
-  var newInvoiceButton = CardService.newTextButton()
-    .setText('Send Invoice')
-    .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
-    .setOnClickAction(sendInvoice);
-  invoiceSection.addWidget(invoiceName);
-  var buttonAction = CardService.newAction()
-        .setFunctionName('invoice');
-  invoiceSection.addWidget(CardService.newTextButton()
-        .setText('Notify')
-        .setOnClickAction(buttonAction));
-  invoiceSection.addWidget(CardService.newButtonSet().addButton(newInvoiceButton));
-
-  var description = CardService.newTextInput()
-    .setFieldName('Description')
-    .setTitle('Description');
-
-  var amount = CardService.newTextInput()
-    .setFieldName('Amount')
-    .setTitle('Amount');
-
-  var debit = CardService.newSelectionInput().setTitle('From')
-    .setFieldName('Debit')
-    .setType(CardService.SelectionInputType.DROPDOWN);
-
-  INPUT_MAP.forEach((language, index, array) => {
-    debit.addItem(language.text, language.val, language.val == true);
-  })
-
-  var credit = CardService.newSelectionInput().setTitle('To')
-    .setFieldName('Credit')
-    .setType(CardService.SelectionInputType.DROPDOWN);
-
-  INPUT_MAP.forEach((language, index, array) => {
-    credit.addItem(language.text, language.val, language.val == true);
-  })
-
-  inputSheetSection.addWidget(description);
-  inputSheetSection.addWidget(amount);
-  inputSheetSection.addWidget(debit);
-  inputSheetSection.addWidget(credit);
-
-
-  buttonSheetSection.addWidget(CardService.newButtonSet()
-    .addButton(CardService.newTextButton()
-      .setText('Record Transaction')
-      .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
-      .setOnClickAction(CardService.newAction().setFunctionName('submitRecord'))
-      .setDisabled(false))
-    .addButton(CardService.newTextButton()
-      .setText('Clear')
-      .setOnClickAction(CardService.newAction().setFunctionName('clearText'))
-      .setDisabled(false)));
-
-
-  var card = CardService.newCardBuilder()
-    .setName("Card name")
-    .setHeader(CardService.newCardHeader().setTitle("Perform all bookkeeping actions in your sheet"))
-    .addSection(inputSheetSection)
-    .addSection(buttonSheetSection)
-    .addSection(invoiceSection)
-    .build();
-  return card;
-}
-*/
 
 function copyFile(e) {
   var res = e['formInput'];

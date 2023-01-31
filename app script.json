@@ -1,0 +1,43 @@
+{
+  "timeZone": "Africa/Lagos",
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "dependencies": {
+    "enabledAdvancedServices": [
+      {
+        "userSymbol": "Sheets",
+        "serviceId": "sheets",
+        "version": "v4"
+      }
+    ]
+  },
+  "urlFetchWhitelist": [
+    "https://docs.google.com/spreadsheets"
+  ],
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/spreadsheets",
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/script.send_mail",
+    "https://www.googleapis.com/auth/script.scriptapp",
+    "https://www.googleapis.com/auth/script.external_request"
+  ],
+  "addOns": {
+    "common": {
+      "name": "Peppubooks",
+      "logoUrl": "https://www.linkpicture.com/q/IMG_2430.png",
+      "layoutProperties": {
+        "primaryColor": "#34A853"
+      }
+    },
+    "sheets": {
+      "homepageTrigger": {
+        "runFunction": "onSheet"
+      }
+    },
+    "drive": {
+      "homepageTrigger": {
+        "runFunction": "onDrive"
+      }
+    }
+  }
+}

@@ -18,25 +18,25 @@ const INPUT_MAP = [
 ]
 
 function sendEmails() {
-  var spreadsheet = SpreadsheetApp.openById('1y19ymdqET1R5uVk5uhs9PfbReOVkYUIpR9frAQjN3qM');
+  var sheet = SpreadsheetApp.getActiveSheet();
   /// e.g.  var spreadsheet = SpreadsheetApp.openById('0AkGlO9jJLGO8dDJad3VNTkhJcHR3UXlJSVRNTFJreWc');     
-
-  var sheet = spreadsheet.getSheets()[0]; // gets the first sheet, i.e. sheet 0
 
   var range = sheet.getRange("B1");
   var dateString = new Date().toString();
   range.setValue(dateString);   // this makes all formulas recalculate
 
-  var startRow = 4;  // First row of data to process
-  var numRows = 50;   // Number of rows to process
+  var startRow = 3;  // First row of data to process
+  var numRows = 999;   // Number of rows to process
   // Fetch the range of cells
-  var dataRange = sheet.getRange(startRow, 1, numRows, 4)
+  var dataRange = sheet.getRange(startRow, 3, numRows, 7)
   // Fetch values for each row in the Range.
   var data = dataRange.getValues();
 
+  var date = new Date().getDate().toString();
+
   for (i in data) {
     var row = data[i];
-    if (row[3] == true) {
+    if (row[4] == 'no' && date) {
       var emailAddress = row[0];  // First column
       var message = row[1];       // Second column
       var subject = "Task Item Due";
@@ -70,7 +70,7 @@ function sendInvoice(e) {
     "printtitle=false&" +
     "top_margin=0.5&" +
     "bottom_margin=0.25&" +
-    "left_margin=0.5&" +
+    "left_margin=0.0&" +
     "right_margin=0.5&" +
     "sheetnames=false&" +
     "pagenum=UNDEFINED&" +
@@ -99,10 +99,10 @@ function sendInvoice(e) {
   })
 
   // send info to invoice template record.
-  var date = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F10").getValue();
+  var date = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F10").getDisplayValue();
   var invoiceNum = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F9").getValue();
   var description = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B16:C16").getValue();
-  var dueDate = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F11").getValue();
+  var dueDate = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F11").getDisplayValue();
   var amount = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F31").getValue();
   // var receiverAddr = email
 
@@ -136,7 +136,7 @@ function sendInvoice(e) {
 }
 
 // update transaction if invoice is completed
-function onEdit() {
+function blah() {
   var spreadsheet = SpreadsheetApp.openById('1_f0kSp0jD5LLG_HRfzJymq-YDQc52qw58F9CEMBV7ps');
   /// e.g.  var spreadsheet = SpreadsheetApp.openById('0AkGlO9jJLGO8dDJad3VNTkhJcHR3UXlJSVRNTFJreWc');     
 
@@ -163,14 +163,13 @@ function onEdit() {
         Sheets.Spreadsheets.Values.append(
           request,
           spreadsheetId,
-          'A:E',
+          'Transactions!A:E',
           optionalArgs
         )
       }
     }
   }
 }
-
 
 function onHomepage() {
   ScriptApp.newTrigger('sendEmails')
@@ -217,19 +216,23 @@ function invoice() {
 
   var dueDate = CardService.newDatePicker()
     .setFieldName('Due Date')
-    .setTitle('Due Date');
+    .setTitle('Due Date')
 
-  var description = CardService.newTextInput()
-    .setFieldName(`Description`)
-    .setTitle(`Description`);
+  var paymentTerms = CardService.newTextInput()
+    .setFieldName(`PayTerms`)
+    .setTitle(`Warranty, returns policy...`);
 
-  var quantity = CardService.newTextInput()
-    .setFieldName(`Quantity`)
-    .setTitle(`Quantity`);
+  var totalTax = CardService.newTextInput()
+    .setFieldName(`Tax`)
+    .setTitle(`Total Tax (Optional)`);
 
-  var unitPrice = CardService.newTextInput()
-    .setFieldName(`Unit Price`)
-    .setTitle(`Unit Price`);
+  var discount = CardService.newTextInput()
+    .setFieldName(`Discount`)
+    .setTitle(`Discount (Optional)`);
+
+  var email = CardService.newTextInput()
+    .setFieldName(`Client Email`)
+    .setTitle(`Client Email`);
 
   var postInvoice = CardService.newAction()
     .setFunctionName('postInvoice');
@@ -251,11 +254,12 @@ function invoice() {
 
   invoiceSection.addWidget(contactName);
   invoiceSection.addWidget(clientName);
+  invoiceSection.addWidget(email);
   invoiceSection.addWidget(clientAddress);
   invoiceSection.addWidget(dueDate);
-  invoiceSection.addWidget(description);
-  invoiceSection.addWidget(quantity);
-  invoiceSection.addWidget(unitPrice);
+  invoiceSection.addWidget(discount);
+  invoiceSection.addWidget(totalTax);
+  invoiceSection.addWidget(paymentTerms);
   invoiceSection.addWidget(CardService.newButtonSet().addButton(newpostInvoiceButton));
 
   sendInvoiceSection.addWidget(invoiceName);
@@ -340,9 +344,6 @@ function onSheet() {
     .setText('Transaction Actions')
     .setOnClickAction(buttonAction));
 
-
-
-
   var card = CardService.newCardBuilder()
     .setName("Card name")
     .setHeader(CardService.newCardHeader().setTitle("Perform all bookkeeping actions in your sheet").setImageUrl('https://www.linkpicture.com/q/IMG_2430.png'))
@@ -364,23 +365,41 @@ function copyFile(e) {
 
 function postInvoice(e) {
   var res = e['formInput'];
-  var contactName = res['Contact Name'] ? res['Contact Name'] : 'Expenses';
-  var clientName = res['Client Company'] ? res['Client Company'] : 'Expenses';
-  var clientAddress = res['Client Address'] ? res['Client Address'] : 'Expenses';
-  var dueDate = res['Due Date'] ? res['Due Date'] : 'Expenses';
-  var description = res['Description'] ? res['Description'] : 'Expenses';
-  var unitPrice = res['Unit Price'] ? res['Unit Price'] : 'Expenses';
-  var quantity = res['Quantity'] ? res['Quantity'] : 'Expenses';
+  var contactName = res['Contact Name'] ? res['Contact Name'] : '';
+  var clientName = res['Client Company'] ? res['Client Company'] : '';
+  var clientEmail = res['Client Email'] ? res['Client Email'] : '';
+  var clientAddress = res['Client Address'] ? res['Client Address'] : '';
+  var dueDate = res['Due Date'] ? res['Due Date'] : '';
+  var payTerms = res['PayTerms'] ? res['PayTerms'] : '';
+  var discount = res['Discount'] ? res['Discount'] : 0;
+  var totalTax = res['totalTax'] ? res['totalTax'] : 0;
   const invNumber = Math.floor(100000 + Math.random() * 900000);
+
+  let date = dueDate.msSinceEpoch;
+  // WE NEED TO RETRIEVE USER'S TIMEZONE
+  let formatDate = Utilities.formatDate(new Date(date), "GMT", "yyyy/MM/dd")
+
+  // set today's date as invoice.
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  let mm = today.getMonth() + 1; // Months start at 0!
+  let dd = today.getDate();
+
+  if (dd < 10) dd = '0' + dd;
+  if (mm < 10) mm = '0' + mm;
+
+  const formattedToday = yyyy + '/' + mm + '/' + dd;
 
   SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B10").setValue(contactName);
   SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B11").setValue(clientName);
   SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B12").setValue(clientAddress);
-  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F11").setValue(dueDate);
-  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B16:C16").setValue(description);
-  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!E16").setValue(unitPrice);
-  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!D16").setValue(quantity);
-  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F8").setValue(invNumber);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B13").setValue(clientEmail);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F11").setValue(formatDate);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F26").setValue(discount);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F28").setValue(totalTax);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F9").setValue(`INV${invNumber}`);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B35:F35").setValue(payTerms);
+  SpreadsheetApp.getActiveSheet().getRange("Invoicegen!F10").setValue(formattedToday);
 }
 
 function submitRecord(e) {
@@ -402,7 +421,7 @@ function submitRecord(e) {
   if (dd < 10) dd = '0' + dd;
   if (mm < 10) mm = '0' + mm;
 
-  const formattedToday = dd + '/' + mm + '/' + yyyy;
+  const formattedToday = yyyy + '/' + mm + '/' + dd;
   const transactiomNumber = Math.floor(100000 + Math.random() * 900000);
 
   // Add today's date
@@ -426,7 +445,7 @@ function submitRecord(e) {
   Sheets.Spreadsheets.Values.append(
     request,
     spreadsheetId,
-    'A:E',
+    'Transactions!A:E',
     optionalArgs
   )
 

@@ -17,72 +17,23 @@ const INPUT_MAP = [
   { text: 'Services', val: 'Services' },
 ]
 
-function sendEmails() {
-  var sheet = SpreadsheetApp.getActiveSheet();
-  /// e.g.  var spreadsheet = SpreadsheetApp.openById('0AkGlO9jJLGO8dDJad3VNTkhJcHR3UXlJSVRNTFJreWc');     
-
-  var range = sheet.getRange("B1");
-  var dateString = new Date().toString();
-  range.setValue(dateString);   // this makes all formulas recalculate
-
-  var startRow = 3;  // First row of data to process
-  var numRows = 999;   // Number of rows to process
-  // Fetch the range of cells
-  var dataRange = sheet.getRange(startRow, 3, numRows, 7)
-  // Fetch values for each row in the Range.
-  var data = dataRange.getValues();
-
-  var date = new Date().getDate().toString();
-
-  for (i in data) {
-    var row = data[i];
-    if (row[4] == 'no' && date) {
-      var emailAddress = row[0];  // First column
-      var message = row[1];       // Second column
-      var subject = "Task Item Due";
-      try {
-        Logger.log('emailAddress')
-        MailApp.sendEmail(emailAddress, subject, message);
-        Logger.log(emailAddress)
-      } catch (errorDetails) {
-        Logger.log(errorDetails);
-        // MailApp.sendEmail("eddyparkinson@someaddress.com", "sendEmail script error", errorDetails.message);
-      }
-
-    }
-  }
-
-}
 
 function sendInvoice(e) {
   var res = e['formInput'];
   var invoiceName = res['Invoice Name'] ? res['Invoice Name'] : 'Invoice';
 
-  var ssID = SpreadsheetApp.getActiveSpreadsheet().getId();
-  var gid = SpreadsheetApp.getActiveSpreadsheet().getSheetId();
-  var url = "https://docs.google.com/spreadsheets/d/" + ssID + "/export" +
-    "?format=pdf&" +
-    "size=7&" +
-    "fzr=true&" +
-    "portrait=true&" +
-    "fitw=true&" +
-    "gridlines=false&" +
-    "printtitle=false&" +
-    "top_margin=0.5&" +
-    "bottom_margin=0.25&" +
-    "left_margin=0.0&" +
-    "right_margin=0.5&" +
-    "sheetnames=false&" +
-    "pagenum=UNDEFINED&" +
-    "attachment=true&" +
-    "gid=" + gid + '&';
-
-  var params = { method: "GET", headers: { "authorization": "Bearer " + ScriptApp.getOAuthToken() } };
-
-  var response = UrlFetchApp.fetch(url, params).getBlob();
-  // save to drive
-  //  DriveApp.createFile(response);
-
+   var ss = SpreadsheetApp.getActiveSpreadsheet();
+   var ssID = SpreadsheetApp.getActiveSpreadsheet().getId();
+   
+  var sheets = ss.getSheets();
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].getSheetName() !== 'Invoicegen') {
+      sheets[i].hideSheet()
+    }
+  }
+  for (var i = 0; i < sheets.length; i++) {
+    sheets[i].showSheet()
+  }
 
   //or send as email
   var email = SpreadsheetApp.getActiveSheet().getRange("Invoicegen!B13").getValue();
@@ -93,7 +44,7 @@ function sendInvoice(e) {
   MailApp.sendEmail(email, subject, body, {
     attachments: [{
       fileName: invoiceName + ".pdf",
-      content: response.getBytes(),
+      content: ss.getBlob().getBytes(),
       mimeType: "application/pdf"
     }]
   })
@@ -135,50 +86,6 @@ function sendInvoice(e) {
     .build();
 }
 
-// update transaction if invoice is completed
-function blah() {
-  var spreadsheet = SpreadsheetApp.openById('1_f0kSp0jD5LLG_HRfzJymq-YDQc52qw58F9CEMBV7ps');
-  /// e.g.  var spreadsheet = SpreadsheetApp.openById('0AkGlO9jJLGO8dDJad3VNTkhJcHR3UXlJSVRNTFJreWc');     
-
-  var sheet = spreadsheet.getSheets()[2];
-
-  var dataRange = sheet.getRange(1, 7, 999);
-  var values = dataRange.getValues();
-
-
-
-  var optionalArgs = { valueInputOption: "USER_ENTERED" };
-
-  for (var row in values) {
-    for (var col in values[row]) {
-      if (values[row][col] == "yes") {
-        var request = {
-          "majorDimension": "ROWS",
-          "values": [
-            [
-              values[row][col]
-            ]
-          ]
-        };
-        Sheets.Spreadsheets.Values.append(
-          request,
-          spreadsheetId,
-          'Transactions!A:E',
-          optionalArgs
-        )
-      }
-    }
-  }
-}
-
-function onHomepage() {
-  ScriptApp.newTrigger('sendEmails')
-    .timeBased()
-    .atHour(7)
-    .nearMinute(0)
-    .everyDays(1)
-    .create();
-}
 
 function onDrive() {
   var sheetName = CardService.newTextInput()
@@ -355,8 +262,8 @@ function onSheet() {
 function copyFile(e) {
   var res = e['formInput'];
   var sheetName = res['Sheet Name'] ? res['Sheet Name'] : 'Expenses';
-  let file = DriveApp.getFileById('1S4GMiZ0H0_6OHH7DEnjZt07-6kk0eMP4YSNUmRcKZXA');
-  file = file.makeCopy().setName(sheetName);
+  let id = '1S4GMiZ0H0_6OHH7DEnjZt07-6kk0eMP4YSNUmRcKZXA';
+  let file = Drive.Files.copy({title: sheetName}, id);
   return CardService.newActionResponseBuilder()
     .setNotification(CardService.newNotification()
       .setText(`Successfuly created the file ${sheetName}`))

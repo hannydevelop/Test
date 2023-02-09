@@ -217,10 +217,6 @@ function transaction() {
       .setText('Record Transaction')
       .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
       .setOnClickAction(CardService.newAction().setFunctionName('submitRecord'))
-      .setDisabled(false))
-    .addButton(CardService.newTextButton()
-      .setText('Clear')
-      .setOnClickAction(CardService.newAction().setFunctionName('clearText'))
       .setDisabled(false)));
 
   var card = CardService.newCardBuilder()
@@ -232,12 +228,12 @@ function transaction() {
   return card;
 }
 
+
 function onSheet() {
   var buttonAction = CardService.newAction()
     .setFunctionName('invoice');
   navigationSection.addWidget(CardService.newDecoratedText()
-    .setBottomLabel("Record Transactions in Sheet")
-    .setIconUrl('https://www.linkpicture.com/q/book_5.png')
+    .setBottomLabel("Create, Send and Track Invoices")
     .setEndIcon(CardService.newIconImage().setIconUrl('https://www.linkpicture.com/q/icons8-forward-button-64.png'))
     .setText('Invoice Actions')
     .setOnClickAction(buttonAction));
@@ -245,15 +241,14 @@ function onSheet() {
   var buttonAction = CardService.newAction()
     .setFunctionName('transaction');
   navigationSection.addWidget(CardService.newDecoratedText()
-    .setBottomLabel("Create, Send and Track Invoices")
-    .setIconUrl('https://www.linkpicture.com/q/bookkeeping.png')
+    .setBottomLabel("Record Transactions in Sheet")
     .setEndIcon(CardService.newIconImage().setIconUrl('https://www.linkpicture.com/q/icons8-forward-button-64.png'))
     .setText('Transaction Actions')
     .setOnClickAction(buttonAction));
 
   var card = CardService.newCardBuilder()
     .setName("Card name")
-    .setHeader(CardService.newCardHeader().setTitle("Perform all bookkeeping actions in your sheet").setImageUrl('https://www.linkpicture.com/q/IMG_2430.png'))
+    .setHeader(CardService.newCardHeader().setTitle("Perform all bookkeeping actions in your sheet").setImageUrl('https://www.linkpicture.com/q/32x32-google.png'))
     .addSection(navigationSection)
     .build();
   return card;
@@ -261,7 +256,7 @@ function onSheet() {
 
 function copyFile(e) {
   var res = e['formInput'];
-  var sheetName = res['Sheet Name'] ? res['Sheet Name'] : 'Expenses';
+  var sheetName = res['Sheet Name'] ? res['Sheet Name'] : '';
   let id = '1S4GMiZ0H0_6OHH7DEnjZt07-6kk0eMP4YSNUmRcKZXA';
   let file = Drive.Files.copy({title: sheetName}, id);
   return CardService.newActionResponseBuilder()
@@ -313,10 +308,10 @@ function submitRecord(e) {
   var res = e['formInput'];
 
 
-  var Description = res['Description'] ? res['Description'] : 'Expenses';
-  var Amount = res['Amount'] ? res['Amount'] : 'Expenses';
-  var Debit = res['Debit'] ? res['Debit'] : 'Expenses';
-  var Credit = res['Credit'] ? res['Credit'] : 'Expenses';
+  var Description = res['Description'] ? res['Description'] : '';
+  var Amount = res['Amount'] ? res['Amount'] : '';
+  var Debit = res['Debit'] ? res['Debit'] : '';
+  var Credit = res['Credit'] ? res['Credit'] : '';
 
 
   let spreadsheetId = SpreadsheetApp.getActiveSpreadsheet().getId();

@@ -232,11 +232,10 @@ function transaction() {
 
 function template() {
   var selectedGrid = CardService.newGrid()
-    .setTitle("My Grid")
+    .setTitle("Selected Template")
     .setNumColumns(2)
     .addItem(CardService.newGridItem()
-      .setTitle("My item")
-      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Transaction.png')));
+      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Invoice-Template-3.jpg')));
   selectInvoiceSection.addWidget(selectedGrid);
 
   /*if () {
@@ -251,7 +250,7 @@ function template() {
   */
 
   var grid = CardService.newGrid()
-    .setTitle("title")
+    .setTitle("Choose Template")
     .setBorderStyle(CardService.newBorderStyle().setType(CardService.BorderType.STROKE))
     .setOnClickAction(
       CardService.newAction()
@@ -260,19 +259,19 @@ function template() {
     .addItem(CardService.newGridItem()
       .setTitle("X1")
       .setIdentifier("001")
-      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Transaction.png')))
+      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Invoice-Template-3.jpg')))
     .addItem(CardService.newGridItem()
       .setTitle("X2")
       .setIdentifier("002")
-      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Balancesheet.png')))
+      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/invoice_template_page_1.png')))
     .addItem(CardService.newGridItem()
       .setTitle("Y3")
       .setIdentifier("003")
-      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Transaction.png')))
+      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Wide-Margin-Excel-Invoice-Template.png')))
     .addItem(CardService.newGridItem()
       .setTitle("Y4")
       .setIdentifier("004")
-      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Balancesheet.png')))
+      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/6271a4e4cfea70cec0004fee_Freelancer-Invoice-Template2-DB.jpeg')))
 
   selectInvoiceSection.addWidget(grid);
 
@@ -418,41 +417,61 @@ function testGrid(e) {
   let val = e.parameters.grid_item_identifier;
   if (val == '001') {
     var selectedGrid = CardService.newGrid()
-      .setTitle("My Grid")
+      .setTitle("Selected Template")
       .setNumColumns(2)
       .addItem(CardService.newGridItem()
-        .setTitle("My item")
-        .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Transaction.png')));
+        .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Invoice-Template-3.jpg')));
     selectInvoiceSection.addWidget(selectedGrid);
+
+    var buttonAction = CardService.newAction()
+      .setFunctionName('copyTemplateOne');
+    selectInvoiceSection.addWidget(CardService.newTextButton()
+      .setText('Create Template')
+      .setTextButtonStyle(CardService.TextButtonStyle.FILLED).setOnClickAction(buttonAction))
   } else if (val == '002') {
     var selectedGrid = CardService.newGrid()
-      .setTitle("My Grid")
+      .setTitle("Selected Template")
       .setNumColumns(2)
       .addItem(CardService.newGridItem()
-        .setTitle("My item")
-        .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Balancesheet.png')));
+        .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/invoice_template_page_1.png')));
     selectInvoiceSection.addWidget(selectedGrid);
+
+    var buttonAction = CardService.newAction()
+      .setFunctionName('copyTemplateTwo');
+    selectInvoiceSection.addWidget(CardService.newTextButton()
+      .setText('Create Template')
+      .setTextButtonStyle(CardService.TextButtonStyle.FILLED).setOnClickAction(buttonAction))
   }
   else if (val == '003') {
     var selectedGrid = CardService.newGrid()
-      .setTitle("My Grid")
+      .setTitle("Selected Template")
       .setNumColumns(2)
       .addItem(CardService.newGridItem()
-        .setTitle("My item")
-        .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Transaction.png')));
+        .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Wide-Margin-Excel-Invoice-Template.png')));
     selectInvoiceSection.addWidget(selectedGrid);
+
+    var buttonAction = CardService.newAction()
+      .setFunctionName('copyTemplateThree');
+    selectInvoiceSection.addWidget(CardService.newTextButton()
+      .setText('Create Template')
+      .setTextButtonStyle(CardService.TextButtonStyle.FILLED).setOnClickAction(buttonAction))
   } else if (val == '004') {
     var selectedGrid = CardService.newGrid()
-      .setTitle("My Grid")
+      .setTitle("Selected Template")
       .setNumColumns(2)
       .addItem(CardService.newGridItem()
-        .setTitle("My item")
-        .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Balancesheet.png')));
+        .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/6271a4e4cfea70cec0004fee_Freelancer-Invoice-Template2-DB.jpeg')));
     selectInvoiceSection.addWidget(selectedGrid);
+
+    var buttonAction = CardService.newAction()
+      .setFunctionName('copyTemplateFour');
+    selectInvoiceSection.addWidget(CardService.newTextButton()
+      .setText('Create Template')
+      .setTextButtonStyle(CardService.TextButtonStyle.FILLED).setOnClickAction(buttonAction))
   }
 
   var grid = CardService.newGrid()
-    .setTitle("title")
+    .setTitle("Choose Template")
     .setBorderStyle(CardService.newBorderStyle().setType(CardService.BorderType.STROKE))
     .setOnClickAction(
       CardService.newAction()
@@ -461,19 +480,19 @@ function testGrid(e) {
     .addItem(CardService.newGridItem()
       .setTitle("X1")
       .setIdentifier("001")
-      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Transaction.png')))
+      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Invoice-Template-3.jpg')))
     .addItem(CardService.newGridItem()
       .setTitle("X2")
       .setIdentifier("002")
-      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Balancesheet.png')))
+      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/invoice_template_page_1.png')))
     .addItem(CardService.newGridItem()
       .setTitle("Y3")
       .setIdentifier("003")
-      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Transaction.png')))
+      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Wide-Margin-Excel-Invoice-Template.png')))
     .addItem(CardService.newGridItem()
       .setTitle("Y4")
       .setIdentifier("004")
-      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/Balancesheet.png')))
+      .setImage(CardService.newImageComponent().setImageUrl('https://www.linkpicture.com/q/6271a4e4cfea70cec0004fee_Freelancer-Invoice-Template2-DB.jpeg')))
 
   selectInvoiceSection.addWidget(grid);
 
@@ -482,4 +501,20 @@ function testGrid(e) {
     .addSection(selectInvoiceSection)
     .build();
   return card;
+}
+
+function copyTemplateOne() {
+
+}
+
+function copyTemplateTwo() {
+
+}
+
+function copyTemplateThree() {
+
+}
+
+function copyTemplateFour() {
+
 }

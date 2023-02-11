@@ -18,6 +18,78 @@ const INPUT_MAP = [
   { text: 'Services', val: 'Services' },
 ]
 
+/*The reason we're writing this out, is so that we can call the invcard build function
+  anywhere. */
+  // create invoice
+  var contactName = CardService.newTextInput()
+    .setFieldName(`Contact Name`)
+    .setTitle(`Receiver's name`);
+
+  var clientName = CardService.newTextInput()
+    .setFieldName(`Client Company`)
+    .setTitle(`Client Company's Name`);
+
+  var clientAddress = CardService.newTextInput()
+    .setFieldName(`Client Address`)
+    .setTitle(`Client Company's Address`);
+
+  var dueDate = CardService.newDatePicker()
+    .setFieldName('Due Date')
+    .setTitle('Due Date')
+
+  var paymentTerms = CardService.newTextInput()
+    .setFieldName(`PayTerms`)
+    .setTitle(`Warranty, returns policy...`);
+
+  var totalTax = CardService.newTextInput()
+    .setFieldName(`Tax`)
+    .setTitle(`Total Tax (Optional)`);
+
+  var discount = CardService.newTextInput()
+    .setFieldName(`Discount`)
+    .setTitle(`Discount (Optional)`);
+
+  var email = CardService.newTextInput()
+    .setFieldName(`Client Email`)
+    .setTitle(`Client Email`);
+
+  var postInvoice = CardService.newAction()
+    .setFunctionName('postInvoice');
+  var newpostInvoiceButton = CardService.newTextButton()
+    .setText('View Invoice')
+    .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
+    .setOnClickAction(postInvoice);
+
+  // send invoice to user.
+  var invoiceName = CardService.newTextInput()
+    .setFieldName('Invoice Name')
+    .setTitle('Invoice Name');
+  var sendInvoice = CardService.newAction()
+    .setFunctionName('sendInvoice');
+  var newInvoiceButton = CardService.newTextButton()
+    .setText('Send Invoice')
+    .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
+    .setOnClickAction(sendInvoice);
+
+  invoiceSection.addWidget(contactName);
+  invoiceSection.addWidget(clientName);
+  invoiceSection.addWidget(email);
+  invoiceSection.addWidget(clientAddress);
+  invoiceSection.addWidget(dueDate);
+  invoiceSection.addWidget(discount);
+  invoiceSection.addWidget(totalTax);
+  invoiceSection.addWidget(paymentTerms);
+  invoiceSection.addWidget(CardService.newButtonSet().addButton(newpostInvoiceButton));
+
+  sendInvoiceSection.addWidget(invoiceName);
+  sendInvoiceSection.addWidget(CardService.newButtonSet().addButton(newInvoiceButton));
+
+  var invcard = CardService.newCardBuilder()
+    .setName("Card name")
+    .setHeader(CardService.newCardHeader().setTitle("Create, Send and Track Invoices"))
+    .addSection(invoiceSection)
+    .addSection(sendInvoiceSection);
+
 
 function sendInvoice(e) {
   var res = e['formInput'];
@@ -110,77 +182,7 @@ function onDrive() {
 }
 
 function invoice() {
-  // create invoice
-  var contactName = CardService.newTextInput()
-    .setFieldName(`Contact Name`)
-    .setTitle(`Receiver's name`);
-
-  var clientName = CardService.newTextInput()
-    .setFieldName(`Client Company`)
-    .setTitle(`Client Company's Name`);
-
-  var clientAddress = CardService.newTextInput()
-    .setFieldName(`Client Address`)
-    .setTitle(`Client Company's Address`);
-
-  var dueDate = CardService.newDatePicker()
-    .setFieldName('Due Date')
-    .setTitle('Due Date')
-
-  var paymentTerms = CardService.newTextInput()
-    .setFieldName(`PayTerms`)
-    .setTitle(`Warranty, returns policy...`);
-
-  var totalTax = CardService.newTextInput()
-    .setFieldName(`Tax`)
-    .setTitle(`Total Tax (Optional)`);
-
-  var discount = CardService.newTextInput()
-    .setFieldName(`Discount`)
-    .setTitle(`Discount (Optional)`);
-
-  var email = CardService.newTextInput()
-    .setFieldName(`Client Email`)
-    .setTitle(`Client Email`);
-
-  var postInvoice = CardService.newAction()
-    .setFunctionName('postInvoice');
-  var newpostInvoiceButton = CardService.newTextButton()
-    .setText('View Invoice')
-    .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
-    .setOnClickAction(postInvoice);
-
-  // send invoice to user.
-  var invoiceName = CardService.newTextInput()
-    .setFieldName('Invoice Name')
-    .setTitle('Invoice Name');
-  var sendInvoice = CardService.newAction()
-    .setFunctionName('sendInvoice');
-  var newInvoiceButton = CardService.newTextButton()
-    .setText('Send Invoice')
-    .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
-    .setOnClickAction(sendInvoice);
-
-  invoiceSection.addWidget(contactName);
-  invoiceSection.addWidget(clientName);
-  invoiceSection.addWidget(email);
-  invoiceSection.addWidget(clientAddress);
-  invoiceSection.addWidget(dueDate);
-  invoiceSection.addWidget(discount);
-  invoiceSection.addWidget(totalTax);
-  invoiceSection.addWidget(paymentTerms);
-  invoiceSection.addWidget(CardService.newButtonSet().addButton(newpostInvoiceButton));
-
-  sendInvoiceSection.addWidget(invoiceName);
-  sendInvoiceSection.addWidget(CardService.newButtonSet().addButton(newInvoiceButton));
-
-  var card = CardService.newCardBuilder()
-    .setName("Card name")
-    .setHeader(CardService.newCardHeader().setTitle("Create, Send and Track Invoices"))
-    .addSection(invoiceSection)
-    .addSection(sendInvoiceSection)
-    .build();
-  return card;
+  
 }
 
 function transaction() {
@@ -503,8 +505,21 @@ function testGrid(e) {
   return card;
 }
 
+var cardBuilder1 = CardService.newCardBuilder();
+var cardBuilder2 = CardService.newCardBuilder();
+
 function copyTemplateOne() {
 
+  var source = SpreadsheetApp.getActiveSpreadsheet();
+
+  var destination = SpreadsheetApp.openById("1yRfnRiEGX9LmkkaqFFEnouQ1LyBJJkOGxgeYUsepEHg");
+  let sheet = destination.getSheets()[0]
+
+  sheet.copyTo(source);
+
+  // call invoice card.
+  let card = invcard.build();
+  return card;
 }
 
 function copyTemplateTwo() {
